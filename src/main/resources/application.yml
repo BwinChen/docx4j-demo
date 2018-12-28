@@ -1,0 +1,3 @@
+logging:
+  level:
+    org.docx4j: INFO
