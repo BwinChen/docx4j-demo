@@ -6,7 +6,6 @@ import org.docx4j.openpackaging.packages.PresentationMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.PartName;
-import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +20,7 @@ public class Docx4jUtil {
 
     public static void main(String[] args) throws Exception {
         saveDocxImage("D:/Test/docx/battcn-plus手册.docx", "D:/Test/image");
-        savePptxImage("D:/Test/pptx/test pptx.pptx", "D:/Test/image");
+        savePptxImage("D:/Test/pptx/battcn-plus手册.pptx", "D:/Test/image");
     }
 
     /**
@@ -50,20 +49,21 @@ public class Docx4jUtil {
      */
     private static void saveImage(OpcPackage opcPackage, String destination, String partNamePattern) throws IOException {
         for (Map.Entry<PartName, Part> partEntry : opcPackage.getParts().getParts().entrySet()) {
-            if (partEntry.getValue() instanceof BinaryPartAbstractImage) {
-                BinaryPartAbstractImage image = (BinaryPartAbstractImage) partEntry.getValue();
+            Part part = partEntry.getValue();
+            if (part instanceof BinaryPartAbstractImage) {
+                BinaryPartAbstractImage image = (BinaryPartAbstractImage) part;
                 String contentType = image.getContentType();
-                PartName partName = image.getPartName();
-                log.info(String.format("contentType=%s, partName=%s", contentType, partName.getName()));
+                String partName = image.getPartName().getName();
+                log.info(String.format("contentType=%s, partName=%s", contentType, partName));
                 String fileName = null;
-                if (partName.getName().contains(partNamePattern)) {
-                    fileName = partName.getName().substring(partName.getName().indexOf(partNamePattern) + partNamePattern.length());
+                if (partName.contains(partNamePattern)) {
+                    fileName = partName.substring(partName.indexOf(partNamePattern) + partNamePattern.length());
                 }
                 if (fileName == null) {
                     continue;
                 }
                 FileOutputStream outputStream = new FileOutputStream(destination + File.separator + fileName);
-                ((BinaryPart) partEntry.getValue()).writeDataToOutputStream(outputStream);
+                image.writeDataToOutputStream(outputStream);
                 outputStream.close();
             }
         }
