@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <docx4j.version>6.1.0</docx4j.version>
+        <poi.version>4.0.1</poi.version>
     </properties>
 
     <dependencies>
@@ -26,7 +28,7 @@
         <dependency>
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j</artifactId>
-            <version>6.1.0</version>
+            <version>${docx4j.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-log4j12</artifactId>
@@ -37,7 +39,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
-            <version>4.0.1</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
