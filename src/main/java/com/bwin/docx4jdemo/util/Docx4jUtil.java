@@ -3,6 +3,7 @@ package com.bwin.docx4jdemo.util;
 import lombok.extern.slf4j.Slf4j;
 import org.docx4j.openpackaging.packages.OpcPackage;
 import org.docx4j.openpackaging.packages.PresentationMLPackage;
+import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.PartName;
@@ -17,10 +18,12 @@ public class Docx4jUtil {
 
     private static final String DOCX_IMAGE_PART_NAME_PATTERN = "/word/media/";
     private static final String PPTX_IMAGE_PART_NAME_PATTERN = "/ppt/media/";
+    private static final String XLSX_IMAGE_PART_NAME_PATTERN = "/xl/media/";
 
     public static void main(String[] args) throws Exception {
         saveDocxImage("D:/Test/docx/battcn-plus手册.docx", "D:/Test/image");
         savePptxImage("D:/Test/pptx/battcn-plus手册.pptx", "D:/Test/image");
+        saveXlsxImage("D:/Test/xlsx/battcn-plus手册.xlsx", "D:/Test/image");
     }
 
     /**
@@ -41,6 +44,16 @@ public class Docx4jUtil {
     public static void savePptxImage(String file, String destination) throws Exception {
         PresentationMLPackage presentationMLPackage = PresentationMLPackage.load(new File(file));
         saveImage(presentationMLPackage, destination, PPTX_IMAGE_PART_NAME_PATTERN);
+    }
+
+    /**
+     * 提取xlsx文档图片
+     * @param file 源文件
+     * @param destination 保存目录
+     */
+    public static void saveXlsxImage(String file, String destination) throws Exception {
+        SpreadsheetMLPackage presentationMLPackage = SpreadsheetMLPackage.load(new File(file));
+        saveImage(presentationMLPackage, destination, XLSX_IMAGE_PART_NAME_PATTERN);
     }
 
     /**
