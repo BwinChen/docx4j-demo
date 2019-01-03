@@ -10,7 +10,7 @@ import java.io.InputStream;
  * @date 2017年9月14日
  * 
  */
-public class ProgressUtil {
+public class ProcessUtil {
 
 	/**
 	 * 防止进程还没有执行完就返回
