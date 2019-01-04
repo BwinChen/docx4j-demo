@@ -60,11 +60,8 @@ public class PdfUtil {
                                     PDImageXObject imageXObject = (PDImageXObject) resources.getXObject(cosName);
                                     BufferedImage image = imageXObject.getImage();
                                     String suffix = imageXObject.getSuffix();
-                                    try (FileOutputStream outputStream = new FileOutputStream(directory + UUID.randomUUID() + "." + suffix)) {
-                                        ImageIO.write(image, suffix, outputStream);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    FileOutputStream outputStream = new FileOutputStream(directory + UUID.randomUUID() + "." + suffix);
+                                    ImageIO.write(image, suffix, outputStream);
                                 }
                             }
                         }
@@ -72,14 +69,14 @@ public class PdfUtil {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             try {
                 if (document != null) {
                     document.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         return texts;

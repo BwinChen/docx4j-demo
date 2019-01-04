@@ -32,16 +32,24 @@ public class PoiUtil {
      * @param destination 保存目录
      * @see <a href="https://blog.csdn.net/GlutinousRice/article/details/79590445">java-poi3.17读取word文本及图片</a>
      */
-    public static void saveDocImage(String file, String destination) throws IOException {
-        FileInputStream inputStream = new FileInputStream(new File(file));
-        HWPFDocument doc = new HWPFDocument(inputStream);
-        PicturesTable picturesTable = doc.getPicturesTable();
-        List<Picture> pictures = picturesTable.getAllPictures();
-        for (Picture picture : pictures) {
-            String fileName = picture.suggestFullFileName();
-            FileOutputStream out = new FileOutputStream(new File(destination + File.separator + fileName));
-            picture.writeImageContent(out);
-            out.close();
+    public static void saveDocImage(String file, String destination) {
+        FileInputStream inputStream = null;
+        HWPFDocument document = null;
+        try {
+            inputStream = new FileInputStream(new File(file));
+            document = new HWPFDocument(inputStream);
+            PicturesTable picturesTable = document.getPicturesTable();
+            List<Picture> pictures = picturesTable.getAllPictures();
+            for (Picture picture : pictures) {
+                String fileName = picture.suggestFullFileName();
+                FileOutputStream out = new FileOutputStream(new File(destination + File.separator + fileName));
+                picture.writeImageContent(out);
+                out.close();
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            close(inputStream, document, null, null);
         }
     }
 
@@ -51,15 +59,23 @@ public class PoiUtil {
      * @param destination 保存目录
      * @see <a href="https://blog.csdn.net/GlutinousRice/article/details/79597055">java-poi3.17读取ppt文本和图片</a>
      */
-    public static void savePptImage(String file, String destination) throws IOException {
-        FileInputStream inputStream = new FileInputStream(new File(file));
-        SlideShow slideShow = new HSLFSlideShow(inputStream);
-        List pictureDatas = slideShow.getPictureData();
-        for (Object object : pictureDatas) {
-            PictureData pictureData = (PictureData) object;
-            String type = pictureData.getType().toString();
-            byte[] data = pictureData.getData();
-            saveData(destination, type, data);
+    public static void savePptImage(String file, String destination) {
+        FileInputStream inputStream = null;
+        SlideShow slideShow = null;
+        try {
+            inputStream = new FileInputStream(new File(file));
+            slideShow = new HSLFSlideShow(inputStream);
+            List pictureDatas = slideShow.getPictureData();
+            for (Object object : pictureDatas) {
+                PictureData pictureData = (PictureData) object;
+                String type = pictureData.getType().toString();
+                byte[] data = pictureData.getData();
+                saveData(destination, type, data);
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            close(inputStream, null, slideShow, null);
         }
     }
 
@@ -69,19 +85,27 @@ public class PoiUtil {
      * @param destination 保存目录
      * @see <a href="https://blog.csdn.net/GlutinousRice/article/details/79596998">java-poi3.17读取excel文本和图片</a>
      */
-    public static void saveXlsImage(String file, String destination) throws IOException {
-        FileInputStream inputStream = new FileInputStream(new File(file));
-        Workbook workbook = new HSSFWorkbook(inputStream);
-        int sheetCount = workbook.getNumberOfSheets();
-        if (sheetCount > 0) {
-            List pictures = workbook.getAllPictures();
-            for (Object object : pictures) {
-                HSSFPictureData pictureData = (HSSFPictureData) object;
-                pictureData.getFormat();
-                String type = pictureData.suggestFileExtension();
-                byte[] data = pictureData.getData();
-                saveData(destination, type, data);
+    public static void saveXlsImage(String file, String destination) {
+        FileInputStream inputStream = null;
+        Workbook workbook = null;
+        try {
+            inputStream = new FileInputStream(new File(file));
+            workbook = new HSSFWorkbook(inputStream);
+            int sheetCount = workbook.getNumberOfSheets();
+            if (sheetCount > 0) {
+                List pictures = workbook.getAllPictures();
+                for (Object object : pictures) {
+                    HSSFPictureData pictureData = (HSSFPictureData) object;
+                    pictureData.getFormat();
+                    String type = pictureData.suggestFileExtension();
+                    byte[] data = pictureData.getData();
+                    saveData(destination, type, data);
+                }
             }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            close(inputStream, null, null, workbook);
         }
     }
 
@@ -89,6 +113,25 @@ public class PoiUtil {
         FileOutputStream outputStream = new FileOutputStream(destination + File.separator + UUID.randomUUID() + "." + type);
         outputStream.write(data);
         outputStream.close();
+    }
+
+    private static void close(FileInputStream inputStream, HWPFDocument doc, SlideShow slideShow, Workbook workbook) {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (doc != null) {
+                doc.close();
+            }
+            if (slideShow != null) {
+                slideShow.close();
+            }
+            if (workbook != null) {
+                workbook.close();
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
 }

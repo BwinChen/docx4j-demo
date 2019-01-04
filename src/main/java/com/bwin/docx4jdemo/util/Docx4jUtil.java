@@ -1,6 +1,7 @@
 package com.bwin.docx4jdemo.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.OpcPackage;
 import org.docx4j.openpackaging.packages.PresentationMLPackage;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
@@ -20,40 +21,52 @@ public class Docx4jUtil {
     private static final String PPTX_IMAGE_PART_NAME_PATTERN = "/ppt/media/";
     private static final String XLSX_IMAGE_PART_NAME_PATTERN = "/xl/media/";
 
-    public static void main(String[] args) throws Exception {
-        saveDocxImage("D:/Test/docx/battcn-plus手册.docx", "D:/Test/image");
-        savePptxImage("D:/Test/pptx/battcn-plus手册.pptx", "D:/Test/image");
-        saveXlsxImage("D:/Test/xlsx/battcn-plus手册.xlsx", "D:/Test/image");
+    public static void main(String[] args) {
+        saveDocxImage("D:/Test/docx/battcn-plus手册.docx", "D:/Test/image/");
+        savePptxImage("D:/Test/pptx/battcn-plus手册.pptx", "D:/Test/image/");
+        saveXlsxImage("D:/Test/xlsx/battcn-plus手册.xlsx", "D:/Test/image/");
     }
 
     /**
      * 提取docx文档图片
-     * @param file 源文件
+     * @param docx 源文件
      * @param destination 保存目录
      */
-    public static void saveDocxImage(String file, String destination) throws Exception {
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(file));
-        saveImage(wordMLPackage, destination, DOCX_IMAGE_PART_NAME_PATTERN);
+    public static void saveDocxImage(String docx, String destination) {
+        try {
+            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(docx));
+            saveImage(wordMLPackage, destination, DOCX_IMAGE_PART_NAME_PATTERN);
+        } catch (Docx4JException | IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
      * 提取pptx文档图片
-     * @param file 源文件
+     * @param pptx 源文件
      * @param destination 保存目录
      */
-    public static void savePptxImage(String file, String destination) throws Exception {
-        PresentationMLPackage presentationMLPackage = PresentationMLPackage.load(new File(file));
-        saveImage(presentationMLPackage, destination, PPTX_IMAGE_PART_NAME_PATTERN);
+    public static void savePptxImage(String pptx, String destination) {
+        try {
+            PresentationMLPackage presentationMLPackage = PresentationMLPackage.load(new File(pptx));
+            saveImage(presentationMLPackage, destination, PPTX_IMAGE_PART_NAME_PATTERN);
+        } catch (Docx4JException | IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
      * 提取xlsx文档图片
-     * @param file 源文件
+     * @param xlsx 源文件
      * @param destination 保存目录
      */
-    public static void saveXlsxImage(String file, String destination) throws Exception {
-        SpreadsheetMLPackage presentationMLPackage = SpreadsheetMLPackage.load(new File(file));
-        saveImage(presentationMLPackage, destination, XLSX_IMAGE_PART_NAME_PATTERN);
+    public static void saveXlsxImage(String xlsx, String destination) {
+        try {
+            SpreadsheetMLPackage presentationMLPackage = SpreadsheetMLPackage.load(new File(xlsx));
+            saveImage(presentationMLPackage, destination, XLSX_IMAGE_PART_NAME_PATTERN);
+        } catch (Docx4JException | IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
@@ -75,7 +88,7 @@ public class Docx4jUtil {
                 if (fileName == null) {
                     continue;
                 }
-                FileOutputStream outputStream = new FileOutputStream(destination + File.separator + fileName);
+                FileOutputStream outputStream = new FileOutputStream(destination + fileName);
                 image.writeDataToOutputStream(outputStream);
                 outputStream.close();
             }

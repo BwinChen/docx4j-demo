@@ -41,8 +41,8 @@ public class RarUtil {
      * @see <a href="https://blog.csdn.net/flushest/article/details/52117068">JAVA利用cmd命令行调用WINRAR解压及压缩</a>
      */
     private static boolean exe(String cmd) {
-        Runtime runtime = Runtime.getRuntime();
         try {
+            Runtime runtime = Runtime.getRuntime();
             Process p = runtime.exec(cmd);
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(),"GBK"));
             String line;
@@ -54,13 +54,13 @@ public class RarUtil {
                 return false;
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return true;
     }
     
     public static void main(String[] args){
-//        rar("商标注册证", "D:/Test/image/商标注册证.pdf", "D:/Test/image/");
+        rar("商标注册证", "D:/Test/image/商标注册证.pdf", "D:/Test/image/");
         unRar("D:/Test/rar/商标注册证.rar", "D:/Test/image/");
     }
 
