@@ -1,11 +1,13 @@
 package com.bwin.docx4jdemo.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.util.StringUtils;
 import javax.imageio.ImageIO;
@@ -21,7 +23,9 @@ import java.util.UUID;
 public class PdfUtil {
 
     public static void main(String[] args) {
-        List<String> texts = parsePdf("D:/Test/pdf/初步审定公告通知书.pdf", "D:/Test/image/");
+//        List<String> texts = parsePdf("D:/Test/pdf/初步审定公告通知书.pdf", "D:/Test/image/");
+//        log.info(texts.toString());
+        pdf2png("D:/Test/pdf/初步审定公告通知书.pdf", "D:/Test/image/");
     }
 
     /**
@@ -68,7 +72,7 @@ public class PdfUtil {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
             try {
@@ -80,6 +84,44 @@ public class PdfUtil {
             }
         }
         return texts;
+    }
+
+    /**
+     * pdf文件转png图片
+     * @param pdf 源文件
+     * @param destDir 保存目录，若为empty，则视为源文件所在目录
+     * @see <a href="https://blog.csdn.net/yanjiaxin1996/article/details/80561071">java实现pdf转图片</a>
+     */
+    public static void pdf2png(String pdf, String destDir) {
+        PDDocument document = null;
+        try {
+            String name = FilenameUtils.getName(pdf);
+            name = name.substring(0, FilenameUtils.indexOfExtension(name));
+            File file = new File(pdf);
+            if (StringUtils.isEmpty(destDir)) {
+                destDir = file.getParent();
+            }
+            destDir = destDir.endsWith(File.separator) ? destDir : destDir + File.separator;
+            document = PDDocument.load(file);
+            PDFRenderer renderer = new PDFRenderer(document);
+            int pageCount = document.getNumberOfPages();
+            for (int i = 0; i < pageCount; i++) {
+                // call Windows native DPI
+                BufferedImage image = renderer.renderImageWithDPI(i, 144);
+                ImageIO.write(image, "PNG", new File(destDir, name + "_" + (i+1) + ".png"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (document != null) {
+                    document.close();
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
     }
 
 }
