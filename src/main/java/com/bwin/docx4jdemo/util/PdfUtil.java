@@ -111,7 +111,7 @@ public class PdfUtil {
                 ImageIO.write(image, "PNG", new File(destDir, name + "_" + (i+1) + ".png"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         finally {
             try {
