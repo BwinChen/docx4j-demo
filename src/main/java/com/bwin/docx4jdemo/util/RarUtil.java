@@ -12,7 +12,7 @@ public class RarUtil {
     * cmd 压缩与解压缩命令
     */
 	private static String rarCmd = "D:/Program Files/WinRAR/Rar.exe a ";
-    private static String unRarCmd = "D:/Program Files/WinRAR/UnRAR x ";
+    private static String unRarCmd = "D:/Program Files/WinRAR/UnRAR x -y ";
 
    /**
     * 将1个文件压缩成RAR格式
