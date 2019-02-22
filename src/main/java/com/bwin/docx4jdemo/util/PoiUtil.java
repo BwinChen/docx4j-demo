@@ -21,9 +21,9 @@ import java.util.UUID;
 public class PoiUtil {
 
     public static void main(String[] args) throws Exception {
-        saveDocImage("D:/Test/doc/battcn-plus手册.doc","D:/Test/image");
-        savePptImage("D:/Test/ppt/battcn-plus手册.ppt","D:/Test/image");
-        saveXlsImage("D:/Test/xls/battcn-plus手册.xls","D:/Test/image");
+        saveDocImage("D:/Test/doc/battcn-plus手册.doc","D:/Test/image/");
+        savePptImage("D:/Test/ppt/battcn-plus手册.ppt","D:/Test/image/");
+        saveXlsImage("D:/Test/xls/battcn-plus手册.xls","D:/Test/image/");
     }
 
     /**
@@ -42,7 +42,7 @@ public class PoiUtil {
             List<Picture> pictures = picturesTable.getAllPictures();
             for (Picture picture : pictures) {
                 String fileName = picture.suggestFullFileName();
-                FileOutputStream out = new FileOutputStream(new File(destination + File.separator + fileName));
+                FileOutputStream out = new FileOutputStream(new File(destination + fileName));
                 picture.writeImageContent(out);
                 out.close();
             }
@@ -110,7 +110,7 @@ public class PoiUtil {
     }
 
     private static void saveData(String destination, String type, byte[] data) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(destination + File.separator + UUID.randomUUID() + "." + type);
+        FileOutputStream outputStream = new FileOutputStream(destination + UUID.randomUUID() + "." + type);
         outputStream.write(data);
         outputStream.close();
     }
