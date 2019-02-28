@@ -5,7 +5,7 @@ spring:
   application:
     name: docx4j
   datasource:
-    url: jdbc:mysql://192.168.2.52:3306/hedao_brandinfo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://192.168.2.52:3306/hedao_brandinfo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useSSL=false
     username: guohe
     password: guoheroot
   thymeleaf:

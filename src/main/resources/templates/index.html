@@ -7,6 +7,16 @@
 </head>
 <body>
 
+<h2>上传图片文档压缩文件示例</h2>
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/uploads/upload">
+        <p>
+            文件1：<input type="file" name="file"/>
+            <input type="submit" value="上传"/>
+        </p>
+    </form>
+</div>
+
 <h2>单一文件上传示例</h2>
 <div>
     <form method="POST" enctype="multipart/form-data" action="/uploads/upload1">

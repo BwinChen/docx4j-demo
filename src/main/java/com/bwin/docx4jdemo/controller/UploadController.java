@@ -34,10 +34,15 @@ public class UploadController {
         return "index";
     }
 
+    @PostMapping("/upload")
+    @ResponseBody
+    public void upload(@RequestParam("file") MultipartFile file) throws IOException {
+        uploadService.upload(file);
+    }
+
     @PostMapping("/upload1")
     @ResponseBody
     public Map<String, String> upload1(@RequestParam("file") MultipartFile file) throws IOException {
-        uploadService.upload(file);
         log.info("[文件类型] - [{}]", file.getContentType());
         log.info("[文件名称] - [{}]", file.getOriginalFilename());
         log.info("[文件大小] - [{}]", file.getSize());
@@ -71,7 +76,7 @@ public class UploadController {
 
     @PostMapping("/upload3")
     @ResponseBody
-    public void upload2(String base64) throws IOException {
+    public void upload3(String base64) throws IOException {
         // TODO BASE64 方式的 格式和名字需要自己控制（如 png 图片编码后前缀就会是 data:image/png;base64,）
         final File tempFile = new File("D:\\Test\\upload\\test.jpg");
         // TODO 防止有的传了 data:image/png;base64, 有的没传的情况
